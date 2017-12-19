@@ -20,7 +20,6 @@
     export default {
         mounted() {
             axios.get('/api/posts/' + this.$route.params.id).then(response=>{
-                console.log(this.$route.params.id)
                 this.post = response.data
             })
         },
