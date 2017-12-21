@@ -20,3 +20,4 @@ Route::get('/posts','PostsController@index');
 Route::get('/posts/{post}','PostsController@show');
 
 Route::post('/register','Auth\RegisterController@register');
+Route::post('/login','Auth\LoginController@login');

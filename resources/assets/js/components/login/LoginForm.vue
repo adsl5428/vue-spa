@@ -43,17 +43,15 @@
         methods:{
             login(){
                 let formdata = {
-                        client_id:'2',
-                        client_secret:'QAJATHCkldY2RIUDnKW6EddN58MHPcedqoKXWxac',
-                        grant_type:'password',
-                        scope:'',
-                        username:this.email,
-                        password:this.password
+                        'email':this.email,
+                        'password':this.password
                     }
-                axios.post('/oauth/token',formdata ).then(response=>{
-                    JWTToken.setToken(response.data.access_token)
+                axios.post('/api/login',formdata ).then(response=>{
                     console.log(response.data)
+                    JWTToken.setToken(response.data.token)
 //                    this.$router.push({name : 'confirm'})
+                }).catch(error=>{
+                    console.log(error.response.data)
                 })
             }
         }

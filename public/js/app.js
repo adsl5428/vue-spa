@@ -54238,17 +54238,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         login: function login() {
             var formdata = {
-                client_id: '2',
-                client_secret: 'QAJATHCkldY2RIUDnKW6EddN58MHPcedqoKXWxac',
-                grant_type: 'password',
-                scope: '',
-                username: this.email,
-                password: this.password
+                'email': this.email,
+                'password': this.password
             };
-            axios.post('/oauth/token', formdata).then(function (response) {
-                __WEBPACK_IMPORTED_MODULE_0__helpers_jwt__["a" /* default */].setToken(response.data.access_token);
+            axios.post('/api/login', formdata).then(function (response) {
                 console.log(response.data);
+                __WEBPACK_IMPORTED_MODULE_0__helpers_jwt__["a" /* default */].setToken(response.data.token);
                 //                    this.$router.push({name : 'confirm'})
+            }).catch(function (error) {
+                console.log(error.response.data);
             });
         }
     }
