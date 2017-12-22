@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import JWTToken from './../../helpers/jwt'
+    import jwtToken from './../../helpers/jwt'
     export default {
         data(){
             return{
@@ -42,17 +42,20 @@
         },
         methods:{
             login(){
-                let formdata = {
-                        'email':this.email,
-                        'password':this.password
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        let formData = {
+                            'email':this.email,
+                            'password':this.password
+                        }
+
+                        this.$store.dispatch('loginRequest',formData).then(response=>{
+                            this.$router.push({name : 'profile'})
+                        })
                     }
-                axios.post('/api/login',formdata ).then(response=>{
-                    console.log(response.data)
-                    JWTToken.setToken(response.data.token)
-//                    this.$router.push({name : 'confirm'})
-                }).catch(error=>{
-                    console.log(error.response.data)
-                })
+//                    alert('Oh NO!');
+                });
+
             }
         }
     }
