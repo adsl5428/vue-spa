@@ -19,16 +19,26 @@ export default {
     },
     actions:{
          setAuthUser({commit,dispatch}){
-             return axios.get('/api/user').then(response=>{
-                commit({
-                    type: types.SET_AUTH_USER,
-                    user: response.data
+             return axios.get('/api/user').then(response=> {
+                 commit({
+                     type: types.SET_AUTH_USER,
+                     user: response.data
+                 })
+             }).catch( error =>{
+                    console.log('setAuthUser catch')
+                    dispatch('refreshToken')
                 })
-            })
         },
         unsetAuthUser({commit}){
             commit({
                 type: types.UNSET_AUTH_USER,
+            })
+        },
+        refreshToken({commit,dispatch}){
+            return axios.get('/api/token/refresh').then(response=>{
+                dispatch('loginSuccess',response.data)
+            }).catch(error=>{
+                dispatch('logoutRequest')
             })
         }
     }

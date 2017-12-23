@@ -1,3 +1,4 @@
+import Cookie from 'js-cookie'
 export default {
     setToken(token){
         window.localStorage.setItem('jwt_token',token)
@@ -7,5 +8,9 @@ export default {
     },
     removeToken(){
         window.localStorage.removeItem('jwt_token')
+        Cookie.remove('auth_id')
+    },
+    setAuthId(AuthId){
+        Cookie.set('auth_id',AuthId)
     }
 }
