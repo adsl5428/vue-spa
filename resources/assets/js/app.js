@@ -14,7 +14,7 @@ import VeeValidate, { Validator } from 'vee-validate';
 Validator.localize('zh_CN', zh_CN);
 axios.interceptors.request.use(function (config) {
     if(jwtToken.getToken()){
-        config.headers['Authorization'] = 'bearer' + jwtToken.getToken()
+        config.headers['Authorization'] = 'Bearer ' + jwtToken.getToken()
     }
     return config;
 }, function (error) {

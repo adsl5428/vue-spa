@@ -3731,10 +3731,10 @@ window.Vue = __webpack_require__(37);
 
 
 
-__WEBPACK_IMPORTED_MODULE_6_vee_validate__["a" /* Validator */].localize('zh_CN', __WEBPACK_IMPORTED_MODULE_5__locale_zh_CN__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_6_vee_validate__["b" /* Validator */].localize('zh_CN', __WEBPACK_IMPORTED_MODULE_5__locale_zh_CN__["a" /* default */]);
 axios.interceptors.request.use(function (config) {
     if (__WEBPACK_IMPORTED_MODULE_3__helpers_jwt__["a" /* default */].getToken()) {
-        config.headers['Authorization'] = 'bearer' + __WEBPACK_IMPORTED_MODULE_3__helpers_jwt__["a" /* default */].getToken();
+        config.headers['Authorization'] = 'Bearer ' + __WEBPACK_IMPORTED_MODULE_3__helpers_jwt__["a" /* default */].getToken();
     }
     return config;
 }, function (error) {
@@ -3744,7 +3744,7 @@ axios.interceptors.request.use(function (config) {
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_6_vee_validate__["b" /* default */], {
+Vue.use(__WEBPACK_IMPORTED_MODULE_6_vee_validate__["c" /* default */], {
     locale: 'zh_CN'
 });
 
@@ -46114,11 +46114,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    //        created(){
-    //            if (jwtToken.getToken()){
-    //                this.$store.dispatch('setAuthUser')
-    //            }
-    //        },
+    created: function created() {
+        if (__WEBPACK_IMPORTED_MODULE_1__helpers_jwt__["a" /* default */].getToken()) {
+            this.$store.dispatch('setAuthUser');
+        }
+    },
+
     components: {
         TopMenu: __WEBPACK_IMPORTED_MODULE_0__common_TopMenu___default.a
     }
@@ -47000,8 +47001,8 @@ if (false) {
 /* unused harmony export directive */
 /* unused harmony export mixin */
 /* unused harmony export mapFields */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Validator; });
-/* unused harmony export ErrorBag */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Validator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ErrorBag; });
 /* unused harmony export Rules */
 /* unused harmony export version */
 /**
@@ -53977,7 +53978,7 @@ var index_esm = {
 };
 
 
-/* harmony default export */ __webpack_exports__["b"] = (index_esm);
+/* harmony default export */ __webpack_exports__["c"] = (index_esm);
 
 
 /***/ }),
@@ -54301,6 +54302,7 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers_jwt__ = __webpack_require__(92);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vee_validate__ = __webpack_require__(81);
 //
 //
 //
@@ -54334,16 +54336,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            bag: new __WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* ErrorBag */]()
         };
     },
 
+    computed: {
+        mismatchError: function mismatchError() {
+            return this.bag.has('password:auth') && !this.errors.has('password');
+        }
+    },
     methods: {
         login: function login() {
             var _this = this;
@@ -54357,6 +54368,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                     _this.$store.dispatch('loginRequest', formData).then(function (response) {
                         _this.$router.push({ name: 'profile' });
+                    }).catch(function (error) {
+                        if (error.response.status === 421) {
+                            _this.bag.add('password', '邮箱和密码不匹配', 'auth');
+                        }
+                        console.log(error.response);
                     });
                 }
                 //                    alert('Oh NO!');
@@ -54452,7 +54468,10 @@ var render = function() {
         "div",
         {
           staticClass: "form-group",
-          class: { "has-error": _vm.errors.has("password") }
+          class: {
+            "has-error":
+              _vm.errors.has("password") || _vm.bag.has("password:auth")
+          }
         },
         [
           _c(
@@ -54509,6 +54528,22 @@ var render = function() {
                 staticClass: "help-block"
               },
               [_vm._v(_vm._s(_vm.errors.first("password")))]
+            ),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.mismatchError,
+                    expression: "mismatchError"
+                  }
+                ],
+                staticClass: "help-block"
+              },
+              [_vm._v(_vm._s(_vm.bag.first("password:auth")))]
             )
           ])
         ]
@@ -55751,8 +55786,6 @@ var UNSET_AUTH_USER = 'UNSET_AUTH_USER';
                 __WEBPACK_IMPORTED_MODULE_0__helpers_jwt__["a" /* default */].setToken(response.data.token);
                 // this.$store.state.AuthUser.authenticated = true;
                 dispatch('setAuthUser');
-            }).catch(function (error) {
-                console.log(error.response.data);
             });
         },
         logoutRequest: function logoutRequest(_ref2) {

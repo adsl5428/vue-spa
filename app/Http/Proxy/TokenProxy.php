@@ -26,7 +26,7 @@ class TokenProxy
         }
         return response()->json([
             'status'=>false,
-            'message'=>'没激活'
+            'message'=>'cuo wu'
         ],421);
 
     }

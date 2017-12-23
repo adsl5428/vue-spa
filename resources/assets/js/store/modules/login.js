@@ -7,8 +7,6 @@ export default {
                 jwtToken.setToken(response.data.token)
                 // this.$store.state.AuthUser.authenticated = true;
                 dispatch('setAuthUser')
-            }).catch(error=>{
-                console.log(error.response.data)
             })
         },
         logoutRequest({dispatch}){
