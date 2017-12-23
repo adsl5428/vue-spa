@@ -45546,13 +45546,13 @@ router.beforeEach(function (to, from, next) {
             return next({ 'name': 'login' });
         }
     }
-    // if (to.meta.requiresGuest){
-    //     if (Store.state.AuthUser.authenticated || jwtToken.getToken()){
-    //         return next({'name':'home'})
-    //     }else {
-    //         return next()
-    //     }
-    // }
+    if (to.meta.requiresGuest) {
+        if (__WEBPACK_IMPORTED_MODULE_1__store_index__["a" /* default */].state.AuthUser.authenticated || __WEBPACK_IMPORTED_MODULE_2__helpers_jwt__["a" /* default */].getToken()) {
+            return next({ 'name': 'home' });
+        } else {
+            return next();
+        }
+    }
     next();
 });
 
@@ -46114,12 +46114,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    created: function created() {
-        if (__WEBPACK_IMPORTED_MODULE_1__helpers_jwt__["a" /* default */].getToken()) {
-            this.$store.dispatch('setAuthUser');
-        }
-    },
-
+    //        created(){
+    //            if (jwtToken.getToken()){
+    //                this.$store.dispatch('setAuthUser')
+    //            }
+    //        },
     components: {
         TopMenu: __WEBPACK_IMPORTED_MODULE_0__common_TopMenu___default.a
     }
@@ -46213,7 +46212,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         user: function user(state) {
             return state.AuthUser;
         }
-    }))
+    })),
+    methods: {
+        logout: function logout() {
+            var _this = this;
+
+            this.$store.dispatch('logoutRequest').then(function (response) {
+                _this.$router.push({ name: 'home' });
+            });
+        }
+    }
 });
 
 /***/ }),
@@ -46263,7 +46271,21 @@ var render = function() {
               : _vm._e(),
             _vm._v(" "),
             _vm.user.authenticated
-              ? _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("退出")])])
+              ? _c("li", [
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.logout($event)
+                        }
+                      }
+                    },
+                    [_vm._v("退出")]
+                  )
+                ])
               : _vm._e()
           ],
           1
@@ -54006,7 +54028,7 @@ var messages = {
         var _ref8 = _slicedToArray(_ref7, 1),
             confirmedField = _ref8[0];
 
-        return ' \u4E24\u6B21\u5BC6\u7801\u4E0D\u4E00\u81F4.';
+        return '\u4E24\u6B21\u5BC6\u7801\u4E0D\u4E00\u81F4.';
     },
     // confirmed: (field, [confirmedField]) => ` ${field} 不能和${confirmedField}匹配.`,
     date_between: function date_between(field, _ref9) {
@@ -54044,7 +54066,7 @@ var messages = {
         return ' ' + field + '\u5FC5\u987B\u662F ' + width + ' \u50CF\u7D20\u5230 ' + height + ' \u50CF\u7D20.';
     },
     email: function email(field) {
-        return ' ' + field + ' \u5FC5\u987B\u662F\u6709\u6548\u7684\u90AE\u7BB1.';
+        return ' ' + field + '\u5FC5\u987B\u662F\u6709\u6548\u7684\u90AE\u7BB1.';
     },
     ext: function ext(field) {
         return ' ' + field + ' \u5FC5\u987B\u662F\u6709\u6548\u7684\u6587\u4EF6.';
@@ -54077,7 +54099,7 @@ var messages = {
         var _ref24 = _slicedToArray(_ref23, 1),
             length = _ref24[0];
 
-        return ' ' + field + ' \u5FC5\u987B\u81F3\u5C11\u6709 ' + length + ' \u5B57\u7B26.';
+        return ' ' + field + '\u5FC5\u987B\u81F3\u5C11\u6709 ' + length + ' \u5B57\u7B26.';
     },
     min_value: function min_value(field, _ref25) {
         var _ref26 = _slicedToArray(_ref25, 1),
@@ -54095,7 +54117,7 @@ var messages = {
         return ' ' + field + ' \u683C\u5F0F\u65E0\u6548.';
     },
     required: function required(field) {
-        return field + ' \u4E0D\u80FD\u4E3A\u7A7A.';
+        return field + '\u4E0D\u80FD\u4E3A\u7A7A.';
     },
     size: function size(field, _ref27) {
         var _ref28 = _slicedToArray(_ref27, 1),
@@ -55543,6 +55565,8 @@ var index_esm = {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mutation_type__ = __webpack_require__(99);
+var _mutations;
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -55552,11 +55576,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         name: null,
         email: null
     },
-    mutations: _defineProperty({}, __WEBPACK_IMPORTED_MODULE_0__mutation_type__["a" /* SET_AUTH_USER */], function (state, payload) {
+    mutations: (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_type__["a" /* SET_AUTH_USER */], function (state, payload) {
         state.authenticated = true;
         state.name = payload.user.name;
         state.email = payload.user.email;
-    }),
+    }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_type__["b" /* UNSET_AUTH_USER */], function (state) {
+        state.authenticated = false;
+        state.name = null;
+        state.email = null;
+    }), _mutations),
     actions: {
         setAuthUser: function setAuthUser(_ref) {
             var commit = _ref.commit,
@@ -55567,6 +55595,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     type: __WEBPACK_IMPORTED_MODULE_0__mutation_type__["a" /* SET_AUTH_USER */],
                     user: response.data
                 });
+            });
+        },
+        unsetAuthUser: function unsetAuthUser(_ref2) {
+            var commit = _ref2.commit;
+
+            commit({
+                type: __WEBPACK_IMPORTED_MODULE_0__mutation_type__["b" /* UNSET_AUTH_USER */]
             });
         }
     }
@@ -55695,7 +55730,9 @@ if (false) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SET_AUTH_USER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return UNSET_AUTH_USER; });
 var SET_AUTH_USER = 'SET_AUTH_USER';
+var UNSET_AUTH_USER = 'UNSET_AUTH_USER';
 
 /***/ }),
 /* 100 */
@@ -55716,6 +55753,14 @@ var SET_AUTH_USER = 'SET_AUTH_USER';
                 dispatch('setAuthUser');
             }).catch(function (error) {
                 console.log(error.response.data);
+            });
+        },
+        logoutRequest: function logoutRequest(_ref2) {
+            var dispatch = _ref2.dispatch;
+
+            return axios.post('/api/logout').then(function (response) {
+                __WEBPACK_IMPORTED_MODULE_0__helpers_jwt__["a" /* default */].removeToken();
+                dispatch('unsetAuthUser');
             });
         }
     }

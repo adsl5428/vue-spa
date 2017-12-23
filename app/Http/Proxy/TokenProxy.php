@@ -16,7 +16,8 @@ class TokenProxy
 
     public function login($email,$password)
     {
-        if(auth()->attempt(['email'=>$email,'password'=>$password,'is_active'=>1])){
+        if(auth()->attempt(['email'=>$email,'password'=>$password,'is_active'=>0])){
+//        if(auth()->attempt(['email'=>$email,'password'=>$password,'is_active'=>1])){
             return $this->proxy('password',[
                 'username'=>$email,
                 'password'=>$password,
@@ -25,9 +26,26 @@ class TokenProxy
         }
         return response()->json([
             'status'=>false,
-            'message'=>'not match'
+            'message'=>'没激活'
         ],421);
 
+    }
+
+    public function logout()
+    {
+        $user = auth()->guard('api')->user();
+        $accesstoken = $user->token();
+
+        app('db')->table('oauth_refresh_tokens')
+            ->where('access_token_id',$accesstoken->id)
+            ->update([
+                'revoked'=>true,
+            ]);
+        app('cookie')->forget('refreshToken');
+        $accesstoken->revoke();
+        return response()->json([
+            'message'=>'logout!'
+        ],204);
     }
     public function proxy($grantType, array $data = [])
     {
