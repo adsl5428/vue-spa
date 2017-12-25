@@ -22442,6 +22442,8 @@ if (inBrowser && window.Vue) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_auth_user__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_login__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_edit_profile__ = __webpack_require__(49);
+
 
 
 
@@ -22451,7 +22453,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     modules: {
         AuthUser: __WEBPACK_IMPORTED_MODULE_2__modules_auth_user__["a" /* default */],
-        Login: __WEBPACK_IMPORTED_MODULE_3__modules_login__["a" /* default */]
+        Login: __WEBPACK_IMPORTED_MODULE_3__modules_login__["a" /* default */],
+        EditProfile: __WEBPACK_IMPORTED_MODULE_4__modules_edit_profile__["a" /* default */]
     },
     strict: true
 }));
@@ -53838,7 +53841,24 @@ var UNSET_AUTH_USER = 'UNSET_AUTH_USER';
 });
 
 /***/ }),
-/* 49 */,
+/* 49 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers_jwt__ = __webpack_require__(2);
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    actions: {
+        updateProfileRequest: function updateProfileRequest(_ref, formData) {
+            var dispatch = _ref.dispatch;
+
+            return axios.post('/api/user/profile/update', formData).then(function (response) {}).catch(function (error) {});
+        }
+    }
+});
+
+/***/ }),
 /* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -55854,11 +55874,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            name: '',
-            email: ''
-        };
+    created: function created() {
+        this.$store.dispatch('setAuthUser');
+    },
+
+    computed: {
+        name: {
+            get: function get() {
+                return this.$store.state.AuthUser.name;
+            }
+        },
+        email: {
+            get: function get() {
+                return this.$store.state.AuthUser.email;
+            }
+        }
+    },
+    methods: {
+        updateProfile: function updateProfile() {
+            var _this = this;
+
+            var formData = {
+                name: this.name,
+                email: this.email
+            };
+            this.$store.dispatch('updateProfileRequest', formData).then(function (resopnse) {
+                _this.$router.push({ name: 'profile' });
+            }).catch(function (error) {});
+        }
     }
 });
 
@@ -55870,135 +55913,146 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("form", { staticClass: "form-horizontal" }, [
-    _c(
-      "div",
-      {
-        staticClass: "form-group",
-        class: { "has-error": _vm.errors.has("name") }
-      },
-      [
-        _c(
-          "label",
-          { staticClass: "col-md-4 control-label", attrs: { for: "name" } },
-          [_vm._v("用户名")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-6" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.name,
-                expression: "name"
-              },
-              { name: "validate", rawName: "v-validate" }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              "data-vv-rules": "required|min:6",
-              "data-vv-as": "邮箱",
-              id: "name",
-              type: "text",
-              name: "name",
-              required: ""
-            },
-            domProps: { value: _vm.name },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.name = $event.target.value
-              }
-            }
-          }),
-          _vm._v(" "),
+  return _c(
+    "form",
+    {
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          _vm.updateProfile($event)
+        }
+      }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "form-group",
+          class: { "has-error": _vm.errors.has("name") }
+        },
+        [
           _c(
-            "span",
-            {
+            "label",
+            { staticClass: "col-md-4 control-label", attrs: { for: "name" } },
+            [_vm._v("用户名")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("input", {
               directives: [
                 {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.errors.has("name"),
-                  expression: "errors.has('name')"
-                }
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.name,
+                  expression: "name"
+                },
+                { name: "validate", rawName: "v-validate" }
               ],
-              staticClass: "help-block"
-            },
-            [_vm._v(_vm._s(_vm.errors.first("name")))]
-          )
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "form-group",
-        class: { "has-error": _vm.errors.has("email") }
-      },
-      [
-        _c(
-          "label",
-          { staticClass: "col-md-4 control-label", attrs: { for: "email" } },
-          [_vm._v("邮箱")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-6" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.email,
-                expression: "email"
+              staticClass: "form-control",
+              attrs: {
+                "data-vv-rules": "required|min:6",
+                "data-vv-as": "用户名",
+                id: "name",
+                type: "text",
+                name: "name",
+                required: ""
               },
-              { name: "validate", rawName: "v-validate" }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              "data-vv-rules": "required|email",
-              "data-vv-as": "邮箱",
-              id: "email",
-              type: "email",
-              name: "email",
-              required: ""
-            },
-            domProps: { value: _vm.email },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              domProps: { value: _vm.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.name = $event.target.value
                 }
-                _vm.email = $event.target.value
               }
-            }
-          }),
-          _vm._v(" "),
+            }),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.errors.has("name"),
+                    expression: "errors.has('name')"
+                  }
+                ],
+                staticClass: "help-block"
+              },
+              [_vm._v(_vm._s(_vm.errors.first("name")))]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "form-group",
+          class: { "has-error": _vm.errors.has("email") }
+        },
+        [
           _c(
-            "span",
-            {
+            "label",
+            { staticClass: "col-md-4 control-label", attrs: { for: "email" } },
+            [_vm._v("邮箱")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("input", {
               directives: [
                 {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.errors.has("email"),
-                  expression: "errors.has('email')"
-                }
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.email,
+                  expression: "email"
+                },
+                { name: "validate", rawName: "v-validate" }
               ],
-              staticClass: "help-block"
-            },
-            [_vm._v(_vm._s(_vm.errors.first("email")))]
-          )
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _vm._m(0)
-  ])
+              staticClass: "form-control",
+              attrs: {
+                "data-vv-rules": "required|email",
+                "data-vv-as": "邮箱",
+                id: "email",
+                type: "email",
+                name: "email",
+                required: ""
+              },
+              domProps: { value: _vm.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.email = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.errors.has("email"),
+                    expression: "errors.has('email')"
+                  }
+                ],
+                staticClass: "help-block"
+              },
+              [_vm._v(_vm._s(_vm.errors.first("email")))]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _vm._m(0)
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
