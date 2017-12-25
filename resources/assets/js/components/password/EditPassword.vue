@@ -2,19 +2,19 @@
     <div>
         <div class="panel panel-defult">
             <div class="panel-body">
-                <edit-profile-form></edit-profile-form>
+                <edit-password-form></edit-password-form>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import EditProfileForm from './EditProfileForm'
+    import EditPasswordForm from './EditPasswordForm'
 
     export default {
-        name:'edit-profile',
+        name:'edit-password',
         components: {
-            EditProfileForm
+            EditPasswordForm
         }
     }
 </script>

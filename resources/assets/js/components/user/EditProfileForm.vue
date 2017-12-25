@@ -4,9 +4,9 @@
             <label for="name" class="col-md-4 control-label">用户名</label>
             <div class="col-md-6">
                 <input v-model="name"
-                       v-validate data-vv-rules="required|email" data-vv-as="邮箱"
+                       v-validate data-vv-rules="required|min:6" data-vv-as="邮箱"
                        id="name" type="text" class="form-control" name="name" required>
-                <span class="help-block" v-show="errors.has('email')">{{errors.first('name')}}</span>
+                <span class="help-block" v-show="errors.has('name')">{{errors.first('name')}}</span>
             </div>
         </div>
         <div class="form-group" :class="{'has-error' : errors.has('email')}">

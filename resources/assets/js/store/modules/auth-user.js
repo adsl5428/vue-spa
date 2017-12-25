@@ -25,7 +25,7 @@ export default {
                      user: response.data
                  })
              }).catch( error =>{
-                    console.log('setAuthUser catch')
+                    // console.log('setAuthUser catch')
                     dispatch('refreshToken')
                 })
         },
@@ -35,7 +35,7 @@ export default {
             })
         },
         refreshToken({commit,dispatch}){
-            return axios.get('/api/token/refresh').then(response=>{
+            return axios.post('/api/token/refresh').then(response=>{
                 dispatch('loginSuccess',response.data)
             }).catch(error=>{
                 dispatch('logoutRequest')
