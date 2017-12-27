@@ -22443,6 +22443,8 @@ if (inBrowser && window.Vue) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_auth_user__ = __webpack_require__(47);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_login__ = __webpack_require__(48);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_edit_profile__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modules_edit_password__ = __webpack_require__(113);
+
 
 
 
@@ -22454,7 +22456,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
     modules: {
         AuthUser: __WEBPACK_IMPORTED_MODULE_2__modules_auth_user__["a" /* default */],
         Login: __WEBPACK_IMPORTED_MODULE_3__modules_login__["a" /* default */],
-        EditProfile: __WEBPACK_IMPORTED_MODULE_4__modules_edit_profile__["a" /* default */]
+        EditProfile: __WEBPACK_IMPORTED_MODULE_4__modules_edit_profile__["a" /* default */],
+        EditPassword: __WEBPACK_IMPORTED_MODULE_5__modules_edit_password__["a" /* default */]
     },
     strict: true
 }));
@@ -55061,8 +55064,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$validator.validateAll().then(function (result) {
                 if (result) {
                     var formData = {
-                        'email': _this.email,
-                        'password': _this.password
+                        email: _this.email,
+                        password: _this.password
                     };
 
                     _this.$store.dispatch('loginRequest', formData).then(function (response) {
@@ -56293,11 +56296,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            password: ''
+            password: '',
+            password_confirmation: ''
         };
     },
 
-    methods: {}
+    methods: {
+        updatePassword: function updatePassword() {
+            var _this = this;
+
+            this.$validator.validateAll().then(function (result) {
+                if (result) {
+                    var formData = {
+                        password: _this.password
+                    };
+
+                    _this.$store.dispatch('updatePasswordRequest', formData).then(function (response) {
+                        //                            this.$router.push({name : 'profile'})
+                        console.log('success');
+                    }).catch(function (error) {});
+                }
+            });
+        }
+    }
 });
 
 /***/ }),
@@ -56308,121 +56329,136 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("form", { staticClass: "form-horizontal" }, [
-    _c(
-      "div",
-      {
-        staticClass: "form-group",
-        class: { "has-error": _vm.errors.has("password") }
-      },
-      [
-        _c(
-          "label",
-          { staticClass: "col-md-4 control-label", attrs: { for: "password" } },
-          [_vm._v("密码")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-6" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.password,
-                expression: "password"
+  return _c(
+    "form",
+    {
+      staticClass: "form-horizontal",
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          _vm.updatePassword($event)
+        }
+      }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "form-group",
+          class: { "has-error": _vm.errors.has("password") }
+        },
+        [
+          _c(
+            "label",
+            {
+              staticClass: "col-md-4 control-label",
+              attrs: { for: "password" }
+            },
+            [_vm._v("密码")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.password,
+                  expression: "password"
+                },
+                { name: "validate", rawName: "v-validate" }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                "data-vv-rules": "required|min:6",
+                "data-vv-as": "密码",
+                id: "password",
+                type: "password",
+                name: "password",
+                required: ""
               },
-              { name: "validate", rawName: "v-validate" }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              "data-vv-rules": "required|min:6",
-              "data-vv-as": "密码",
-              id: "password",
-              type: "password",
-              name: "password",
-              required: ""
-            },
-            domProps: { value: _vm.password },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              domProps: { value: _vm.password },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.password = $event.target.value
                 }
-                _vm.password = $event.target.value
               }
-            }
-          }),
-          _vm._v(" "),
+            }),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.errors.has("password"),
+                    expression: "errors.has('password')"
+                  }
+                ],
+                staticClass: "help-block"
+              },
+              [_vm._v(_vm._s(_vm.errors.first("password")))]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "form-group",
+          class: { "has-error": _vm.errors.has("password_confirmation") }
+        },
+        [
           _c(
-            "span",
+            "label",
             {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.errors.has("password"),
-                  expression: "errors.has('password')"
-                }
-              ],
-              staticClass: "help-block"
+              staticClass: "col-md-4 control-label",
+              attrs: { for: "password-confirm" }
             },
-            [_vm._v(_vm._s(_vm.errors.first("password")))]
-          )
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "form-group",
-        class: { "has-error": _vm.errors.has("password_confirmation") }
-      },
-      [
-        _c(
-          "label",
-          {
-            staticClass: "col-md-4 control-label",
-            attrs: { for: "password-confirm" }
-          },
-          [_vm._v("确认密码")]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-6" }, [
-          _c("input", {
-            directives: [{ name: "validate", rawName: "v-validate" }],
-            staticClass: "form-control",
-            attrs: {
-              id: "password-confirm",
-              "data-vv-rules": "required|confirmed:password",
-              "data-vv-as": "确认密码",
-              type: "password",
-              name: "password_confirmation",
-              required: ""
-            }
-          }),
+            [_vm._v("确认密码")]
+          ),
           _vm._v(" "),
-          _c(
-            "span",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.errors.has("password_confirmation"),
-                  expression: "errors.has('password_confirmation')"
-                }
-              ],
-              staticClass: "help-block"
-            },
-            [_vm._v(_vm._s(_vm.errors.first("password_confirmation")))]
-          )
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _vm._m(0)
-  ])
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("input", {
+              directives: [{ name: "validate", rawName: "v-validate" }],
+              staticClass: "form-control",
+              attrs: {
+                id: "password-confirm",
+                "data-vv-rules": "required|confirmed:password",
+                "data-vv-as": "确认密码",
+                type: "password",
+                name: "password_confirmation",
+                required: ""
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.errors.has("password_confirmation"),
+                    expression: "errors.has('password_confirmation')"
+                  }
+                ],
+                staticClass: "help-block"
+              },
+              [_vm._v(_vm._s(_vm.errors.first("password_confirmation")))]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _vm._m(0)
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -56964,6 +57000,33 @@ var isDefinedGlobally = function isDefinedGlobally() {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers_jwt__ = __webpack_require__(2);
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    actions: {
+        updatePasswordRequest: function updatePasswordRequest(_ref, formData) {
+            var dispatch = _ref.dispatch;
+
+            return axios.post('/api/user/password/update', formData).then(function (response) {}).catch(function (errors) {});
+        }
+    }
+});
 
 /***/ })
 /******/ ]);

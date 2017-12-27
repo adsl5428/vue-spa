@@ -1,5 +1,5 @@
 <template>
-    <form class="form-horizontal" >
+    <form class="form-horizontal" @submit.prevent="updatePassword">
 
         <div class="form-group" :class="{'has-error' : errors.has('password')}">
             <label for="password" class="col-md-4 control-label">密码</label>
@@ -36,10 +36,28 @@
     export default {
         data(){
             return{
-                password:''
+                password:'',
+                password_confirmation:''
             }
         },
         methods:{
+            updatePassword(){
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        let formData = {
+                            password:this.password
+                        }
+
+                        this.$store.dispatch('updatePasswordRequest',formData).then(response=>{
+//                            this.$router.push({name : 'profile'})
+                            console.log('success')
+
+                        }).catch(error =>{
+
+                        })
+                    }
+                });
+            }
         }
     }
 </script>
