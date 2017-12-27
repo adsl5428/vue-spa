@@ -5,9 +5,9 @@ export default {
         updateProfileRequest({dispatch},formData){
             return axios.post('/api/user/profile/update',formData ).then(response=>{
 
-            }).catch(error=>{
+            }).catch(errors =>{
 
             })
-        }
+        },
     }
 }

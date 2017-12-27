@@ -1,14 +1,15 @@
 <template>
-    <form @submit.prevent="updateProfile">
+    <form class="form-horizontal" @submit.prevent="updateProfile">
         <div class="form-group" :class="{'has-error' : errors.has('name')}">
             <label for="name" class="col-md-4 control-label">用户名</label>
             <div class="col-md-6">
                 <input v-model="name"
-                       v-validate data-vv-rules="required|min:6" data-vv-as="用户名"
+                       v-validate data-vv-rules="required|min:5" data-vv-as="用户名"
                        id="name" type="text" class="form-control" name="name" required>
                 <span class="help-block" v-show="errors.has('name')">{{errors.first('name')}}</span>
             </div>
         </div>
+
         <div class="form-group" :class="{'has-error' : errors.has('email')}">
             <label for="email" class="col-md-4 control-label">邮箱</label>
             <div class="col-md-6">
@@ -22,7 +23,7 @@
         <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
                 <button type="submit" class="btn btn-primary">
-                    更新资料
+                    更新用户信息
                 </button>
             </div>
         </div>
@@ -33,6 +34,8 @@
 <script>
     import jwtToken from './../../helpers/jwt'
     import { ErrorBag } from 'vee-validate';
+    import * as types from './../../store/mutation-type'
+
 
     export default {
         created(){
@@ -42,26 +45,37 @@
             name:{
                 get(){
                     return this.$store.state.AuthUser.name
+                },
+                set(value){
+                    this.$store.commit({
+                        type: types.UPDATE_PROFILE_NAME,
+                        value: value
+                    })
                 }
             },
             email:{
                 get(){
                     return this.$store.state.AuthUser.email
+                },
+                set(value){
+                    this.$store.commit({
+                        type: types.UPDATE_PROFILE_EMAIL,
+                        value: value
+                    })
                 }
             }
         },
         methods:{
             updateProfile(){
-                let formData={
-                    name : this.name,
+                const formData={
+                    name:this.name,
                     email:this.email
                 }
-                this.$store.dispatch('updateProfileRequest',formData).then(resopnse=>{
+                this.$store.dispatch('updateProfileRequest',formData).then(response=>{
                     this.$router.push({name:'profile'})
                 }).catch(error=>{
 
                 })
-
             }
         }
     }

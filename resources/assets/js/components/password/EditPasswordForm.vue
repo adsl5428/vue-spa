@@ -1,8 +1,8 @@
 <template>
-    <form class="form-horizontal" @submit.prevent="register">
+    <form class="form-horizontal" >
 
         <div class="form-group" :class="{'has-error' : errors.has('password')}">
-        <label for="password" class="col-md-4 control-label">密码</label>
+            <label for="password" class="col-md-4 control-label">密码</label>
             <div class="col-md-6">
                 <input v-model="password"
                        v-validate data-vv-rules="required|min:6" data-vv-as="密码"
@@ -24,7 +24,7 @@
         <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
                 <button type="submit" class="btn btn-primary">
-                    修改
+                    更新密码
                 </button>
             </div>
         </div>
@@ -40,15 +40,6 @@
             }
         },
         methods:{
-            register(){
-                let formdata = {
-                        password:this.password
-                    }
-                axios.post('/api/register',formdata ).then(response=>{
-                    console.log(response.data)
-                    this.$router.push({name : 'confirm'})
-                })
-            }
         }
     }
 </script>

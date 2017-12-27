@@ -9,7 +9,8 @@ class ProfileController extends Controller
     public function update()
     {
         request()->user()->update(request()->only('name','email'));
-
+//        return response()->json(['status'=>request()->only('name','email')]);
         return response()->json(['status'=>true]);
+
     }
 }
